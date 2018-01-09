@@ -21,7 +21,7 @@ Run `make quick-test` to run tests against a running dev environment. This **wil
 
 Run `make test` to spin up a standalone testing environment. Tests here will not modify your testing environment. It is significantly slower than `quick-test` because of the added overhead of creating and destroying a docker environment
 
-## Make commands
+## Make Commands
 
 * `make test` - Performs full test in standalone environment.
 * `make quick-test` - Performs full test in currently running dev environment.
@@ -35,7 +35,6 @@ Run `make test` to spin up a standalone testing environment. Tests here will not
 * `make shell` - Get a bash prompt on the dev environment.
 * `make composer-update` - Runs composer update to update requirements.
 * `make seed` - Seeds the database of a running dev environment.
-* `make generate-api-docs` - Generates api documentation after updates to api. **This should be run on a fresh dev environment in conjunction with `make seed`.**
 
 ## License
 

@@ -6,9 +6,21 @@ use Illuminate\Http\Request;
 
 use App\Author;
 use App\Http\Requests\AuthorRequest;
+use App\Http\Resources\AuthorCollection;
+use App\Http\Resources\AuthorResource;
 
 class AuthorController extends Controller
 {
+
+    /**
+     * Relationships to be lazy eager loaded
+     *
+     * @var array
+     */
+    protected $eager_loaded = [
+        'books',
+        'books.editions',
+    ];
 
     /**
      * List all authors
@@ -17,11 +29,11 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        $authors = Author::all();
+        $authors = Author::paginate();
 
-        $authors->load('books', 'books.editions');
+        $authors->load($this->eager_loaded);
 
-        return $authors;
+        return new AuthorCollection($authors);
     }
 
     /**
@@ -33,9 +45,9 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        $author->load('books', 'books.editions');
+        $author->load($this->eager_loaded);
 
-        return $author;
+        return new AuthorResource($author);
     }
 
     /**
@@ -49,7 +61,12 @@ class AuthorController extends Controller
     {
         $author = Author::create($request->all());
 
-        return response()->json($author, 201);
+        $author->load($this->eager_loaded);
+
+        return response()->json(
+            new AuthorResource($author),
+            201
+        );
     }
 
     /**
@@ -64,7 +81,9 @@ class AuthorController extends Controller
     {
         $author->update($request->all());
 
-        return $author;
+        $author->load($this->eager_loaded);
+
+        return new AuthorResource($author);
     }
 
     /**

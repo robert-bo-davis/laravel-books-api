@@ -6,9 +6,22 @@ use Illuminate\Http\Request;
 
 use App\Edition;
 use App\Http\Requests\EditionRequest;
+use App\Http\Resources\EditionCollection;
+use App\Http\Resources\EditionResource;
 
 class EditionController extends Controller
 {
+
+    /**
+     * Relationships to be lazy eager loaded
+     *
+     * @var array
+     */
+    protected $eager_loaded = [
+        'book',
+        'book.author',
+        'book.editions',
+    ];
 
     /**
      * Lists all editions
@@ -17,11 +30,11 @@ class EditionController extends Controller
      */
     public function index()
     {
-        $editions = Edition::all();
+        $editions = Edition::paginate();
 
-        $editions->load('book', 'book.author', 'book.editions');
+        $editions->load($this->eager_loaded);
 
-        return $editions;
+        return new EditionCollection($editions);
     }
 
     /**
@@ -33,9 +46,9 @@ class EditionController extends Controller
      */
     public function show(Edition $edition)
     {
-        $edition->loadMissing('book', 'book.author', 'book.editions');
+        $edition->load($this->eager_loaded);
 
-        return $edition;
+        return new EditionResource($edition);
     }
 
     /**
@@ -49,9 +62,12 @@ class EditionController extends Controller
     {
         $edition = Edition::create($request->all());
 
-        $edition->load('book', 'book.author', 'book.editions');
+        $edition->load($this->eager_loaded);
 
-        return response()->json($edition, 201);
+        return response()->json(
+            new EditionResource($edition),
+            201
+        );
     }
 
     /**
@@ -66,9 +82,9 @@ class EditionController extends Controller
     {
         $edition->update($request->all());
 
-        $edition->load('book', 'book.author', 'book.editions');
+        $edition->load($this->eager_loaded);
 
-        return $edition;
+        return new EditionResource($edition);
     }
 
     /**
