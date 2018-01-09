@@ -60,4 +60,4 @@ seed:
 	docker-compose exec web php artisan db:seed
 
 generate-api-docs:
-	docker-compose exec web php artisan api:generate --noPostmanCollection --routePrefix="api/*" --bindings="author,1|book,4|edition,5"
+	docker-compose exec web php artisan api:generate --force --noResponseCalls --noPostmanCollection --routePrefix="api/*" --bindings="author,1|book,4|edition,5"

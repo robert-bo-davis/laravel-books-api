@@ -55,6 +55,30 @@ class EditionTest extends TestCase
     }
 
     /**
+     * Get book structure
+     *
+     * @return array
+     */
+    public function getBookArray()
+    {
+        return [
+            'type' => 'book',
+            'id'   => $this->book->id,
+            'title' => $this->book->title,
+            'subtitle' => $this->book->subtitle,
+            'author' => [
+                'type'        => 'author',
+                'id'          => $this->author->id,
+                'first_name'  => $this->author->first_name,
+                'middle_name' => $this->author->middle_name,
+                'last_name'   => $this->author->last_name,
+                'birth_year'  => $this->author->birth_year,
+                'death_year'  => $this->author->death_year,
+            ]
+        ];
+    }
+
+    /**
      * Test that editions are created correctly
      *
      * @return void
@@ -65,7 +89,13 @@ class EditionTest extends TestCase
 
         $response = $this->json('POST', '/api/editions', $payload)
             ->assertStatus(201)
-            ->assertJson($payload);
+            ->assertJson([
+                'type'   => 'edition',
+                'number' => $payload['number'],
+                'title'  => $payload['title'],
+                'isbn'   => $payload['isbn'],
+                'book'   => $this->getBookArray(),
+            ]);
 
         Edition::find($response->getData()->id)->delete();
     }
@@ -152,7 +182,13 @@ class EditionTest extends TestCase
             $payload
         )
             ->assertStatus(200)
-            ->assertJson($payload);
+            ->assertJson([
+                'type'   => 'edition',
+                'number' => $payload['number'],
+                'title'  => $payload['title'],
+                'isbn'   => $payload['isbn'],
+                'book'   => $this->getBookArray(),
+            ]);
 
         $edition->delete();
     }
@@ -241,31 +277,33 @@ class EditionTest extends TestCase
         }
 
         /**
-          * TODO: Improve edition list test
-          * assertJsonFragment() doesn't work as expected.
-          * The method sorts the arrays alphabetically.
-          * since the $edition_list array is missing some
-          * keys like "created_at" and "id" the order of
-          * the fragments don't match exactly and the test
-          * fails. There is an open issue related to this at:
-          * https://github.com/laravel/framework/issues/22215
-
-          * assertJson() won't work because nested ordered arrays
-          * must match exactly.
-          */
+         * TODO: Improve edition list test
+         * assertJsonFragment() doesn't work as expected.
+         * The method sorts the arrays alphabetically.
+         * since the $edition_list array is missing some
+         * keys like "created_at" and "id" the order of
+         * the fragments don't match exactly and the test
+         * fails. There is an open issue related to this at:
+         * https://github.com/laravel/framework/issues/22215
+         *
+         * assertJson() won't work because nested ordered arrays
+         * must match exactly.
+         */
 
         $request = $this->json('GET', '/api/editions')
             ->assertStatus(200)
             ->assertJsonStructure([
-                '*' => array_merge(
-                    $this->edition_structure,
-                    [
-                        'book' => array_merge(
-                            $this->book_structure,
-                            ['author' => $this->author_structure]
-                        ),
-                    ]
-                )
+                'data' => [
+                    '*' => array_merge(
+                        $this->edition_structure,
+                        [
+                            'book' => array_merge(
+                                $this->book_structure,
+                                ['author' => $this->author_structure]
+                            ),
+                        ]
+                    )
+                ],
             ]);
 
         foreach ($editions as $edition) {
@@ -284,11 +322,6 @@ class EditionTest extends TestCase
 
         $this->json('GET', '/api/editions/' . $edition->id)
             ->assertStatus(200)
-            ->assertJson([
-                'title'   => $edition->title,
-                'book_id' => $this->book->id,
-                'book'    => $this->book->toArray(),
-            ])
             ->assertJsonStructure(array_merge(
                 $this->edition_structure,
                 [
@@ -297,7 +330,15 @@ class EditionTest extends TestCase
                         ['author' => $this->author_structure]
                     ),
                 ]
-            ));
+            ))
+            ->assertJson([
+                'type'   => 'edition',
+                'id'     => $edition->id,
+                'number' => $edition->number,
+                'title'  => $edition->title,
+                'isbn'   => $edition->isbn,
+                'book'   => $this->getBookArray(),
+            ]);
 
         $edition->delete();
     }

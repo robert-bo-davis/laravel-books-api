@@ -45,6 +45,24 @@ class BookTest extends TestCase
     }
 
     /**
+     * Get author structure
+     *
+     * @return array
+     */
+    public function getAuthorArray()
+    {
+        return [
+            'type'        => 'author',
+            'id'          => $this->author->id,
+            'first_name'  => $this->author->first_name,
+            'middle_name' => $this->author->middle_name,
+            'last_name'   => $this->author->last_name,
+            'birth_year'  => $this->author->birth_year,
+            'death_year'  => $this->author->death_year,
+        ];
+    }
+
+    /**
      * Test that books are created correctly
      *
      * @return void
@@ -55,7 +73,12 @@ class BookTest extends TestCase
 
         $response = $this->json('POST', '/api/books', $payload)
             ->assertStatus(201)
-            ->assertJson($payload);
+            ->assertJson([
+                'type'     => 'book',
+                'title'    => $payload['title'],
+                'subtitle' => $payload['subtitle'],
+                'author'   => $this->getAuthorArray(),
+            ]);
 
         Book::find($response->getData()->id)->delete();
     }
@@ -128,7 +151,12 @@ class BookTest extends TestCase
             $payload
         )
             ->assertStatus(200)
-            ->assertJson($payload);
+            ->assertJson([
+                'type'     => 'book',
+                'title'    => $payload['title'],
+                'subtitle' => $payload['subtitle'],
+                'author'   => $this->getAuthorArray(),
+            ]);
 
         $book->delete();
     }
@@ -227,26 +255,28 @@ class BookTest extends TestCase
         }
 
         /**
-          * TODO: Improve book list test
-          * assertJsonFragment() doesn't work as expected.
-          * The method sorts the arrays alphabetically.
-          * Since the $book_structure array is missing some
-          * keys like "created_at" and "id" the order of
-          * the fragments don't match exactly and the test
-          * fails. There is an open issue related to this at:
-          * https://github.com/laravel/framework/issues/22215
-
-          * assertJson() won't work because nested ordered arrays
-          * must match exactly.
-          */
+         * TODO: Improve book list test
+         * assertJsonFragment() doesn't work as expected.
+         * The method sorts the arrays alphabetically.
+         * Since the $book_structure array is missing some
+         * keys like "created_at" and "id" the order of
+         * the fragments don't match exactly and the test
+         * fails. There is an open issue related to this at:
+         * https://github.com/laravel/framework/issues/22215
+         *
+         * assertJson() won't work because nested ordered arrays
+         * must match exactly.
+         */
 
         $request = $this->json('GET', '/api/books')
             ->assertStatus(200)
             ->assertJsonStructure([
-                '*' => array_merge(
-                    $this->book_structure,
-                    ['author' => $this->author_structure]
-                ),
+                'data' => [
+                    '*' => array_merge(
+                        $this->book_structure,
+                        ['author' => $this->author_structure]
+                    ),
+                ],
             ]);
 
         foreach ($books as $book) {
@@ -265,11 +295,17 @@ class BookTest extends TestCase
 
         $this->json('GET', '/api/books/' . $book->id)
             ->assertStatus(200)
-            ->assertJson($book->toArray())
             ->assertJsonStructure(array_merge(
                 $this->book_structure,
                 ['author' => $this->author_structure]
-            ));
+            ))
+            ->assertJson([
+                'type'     => 'book',
+                'id'       => $book->id,
+                'title'    => $book->title,
+                'subtitle' => $book->subtitle,
+                'author'   => $this->getAuthorArray(),
+            ]);
 
         $book->delete();
     }

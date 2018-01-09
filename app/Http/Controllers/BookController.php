@@ -6,9 +6,21 @@ use Illuminate\Http\Request;
 
 use App\Book;
 use App\Http\Requests\BookRequest;
+use App\Http\Resources\BookCollection;
+use App\Http\Resources\BookResource;
 
 class BookController extends Controller
 {
+
+    /**
+     * Relationships to be lazy eager loaded
+     *
+     * @var array
+     */
+    protected $eager_loaded = [
+        'author',
+        'editions',
+    ];
 
     /**
      * List all books
@@ -17,11 +29,11 @@ class BookController extends Controller
      */
     public function index()
     {
-        $books = Book::all();
+        $books = Book::paginate();
 
-        $books->load('author', 'editions');
+        $books->load($this->eager_loaded);
 
-        return $books;
+        return new BookCollection($books);
     }
 
     /**
@@ -33,9 +45,9 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book->loadMissing('author', 'editions');
+        $book->load($this->eager_loaded);
 
-        return $book;
+        return new BookResource($book);
     }
 
     /**
@@ -49,9 +61,12 @@ class BookController extends Controller
     {
         $book = Book::create($request->all());
 
-        $book->load('author', 'editions');
+        $book->load($this->eager_loaded);
 
-        return response()->json($book, 201);
+        return response()->json(
+            new BookResource($book),
+            201
+        );
     }
 
     /**
@@ -66,9 +81,9 @@ class BookController extends Controller
     {
         $book->update($request->all());
 
-        $book->load('author', 'editions');
+        $book->load($this->eager_loaded);
 
-        return $book;
+        return new BookResource($book);
     }
 
     /**

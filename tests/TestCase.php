@@ -37,14 +37,13 @@ abstract class TestCase extends BaseTestCase
      * @var array
      */
     protected $author_structure = [
+        'type',
         'id',
         'first_name',
         'middle_name',
         'last_name',
         'birth_year',
         'death_year',
-        'created_at',
-        'updated_at',
     ];
 
     /**
@@ -69,13 +68,11 @@ abstract class TestCase extends BaseTestCase
      * @var array
      */
     protected $book_structure = [
+        'type',
         'id',
         'title',
-        'author_id',
         'author'   => [],
         'editions' => [],
-        'created_at',
-        'updated_at',
     ];
 
     /**
@@ -100,16 +97,14 @@ abstract class TestCase extends BaseTestCase
      * @var array
      */
     protected $edition_structure = [
+        'type',
         'id',
         'number',
         'title',
         'isbn',
-        'book_id',
         'book' => [
             'author' => [],
         ],
-        'created_at',
-        'updated_at',
     ];
 
     /**

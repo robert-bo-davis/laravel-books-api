@@ -206,23 +206,25 @@ class AuthorTest extends TestCase
         }
 
         /**
-          * TODO: Improve author list test
-          * assertJsonFragment() doesn't work as expected.
-          * The method sorts the arrays alphabetically.
-          * since the $author_structure array is missing some
-          * keys like "created_at" and "id" the order of
-          * the fragments don't match exactly and the test
-          * fails. There is an open issue related to this at:
-          * https://github.com/laravel/framework/issues/22215
-          *
-          * assertJson() won't work because nested ordered arrays
-          * must match exactly.
-          */
+         * TODO: Improve author list test
+         * assertJsonFragment() doesn't work as expected.
+         * The method sorts the arrays alphabetically.
+         * since the $author_structure array is missing some
+         * keys like "created_at" and "id" the order of
+         * the fragments don't match exactly and the test
+         * fails. There is an open issue related to this at:
+         * https://github.com/laravel/framework/issues/22215
+         *
+         * assertJson() won't work because nested ordered arrays
+         * must match exactly.
+         */
 
         $this->json('GET', '/api/authors')
             ->assertStatus(200)
             ->assertJsonStructure([
-                '*' => $this->author_structure,
+                'data' => [
+                    '*' => $this->author_structure,
+                ],
             ]);
 
         foreach ($authors as $author) {
@@ -242,7 +244,16 @@ class AuthorTest extends TestCase
         $this->json('GET', '/api/authors/' . $author->id)
             ->assertStatus(200)
             ->assertJsonStructure($this->author_structure)
-            ->assertJson($author->toArray());
+            ->assertJson([
+                'type'        => 'author',
+                'id'          => $author->id,
+                'first_name'  => $author->first_name,
+                'middle_name' => $author->middle_name,
+                'last_name'   => $author->last_name,
+                'birth_year'  => $author->birth_year,
+                'death_year'  => $author->death_year,
+                'books'       => [],
+            ]);
 
         $author->delete();
     }

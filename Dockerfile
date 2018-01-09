@@ -24,9 +24,6 @@ RUN apk add --update --no-cache \
         && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN apk add --update --no-cache \
-        php7-simplexml
-
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
 WORKDIR /app
