@@ -64,7 +64,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Get author structure for reuseable author
+     * Get structure for reusable author
      *
      * @return array
      */
@@ -82,7 +82,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * Get book structure
+     * Get structure for reusable book
      *
      * @return array
      */

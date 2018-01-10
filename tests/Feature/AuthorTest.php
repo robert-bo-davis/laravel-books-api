@@ -28,7 +28,8 @@ class AuthorTest extends TestCase
     }
 
     /**
-     * Test that author creation requests fail if they don't contain an author_id
+     * Test that author creation requests fail if they are
+     * missing required fields
      *
      * @return void
      */
@@ -46,7 +47,7 @@ class AuthorTest extends TestCase
     }
 
     /**
-     * Test that author requests fail if author is not an int
+     * Test that author requests fail if they are improperly formatted
      *
      * @return void
      */
@@ -103,7 +104,8 @@ class AuthorTest extends TestCase
     }
 
     /**
-     * Test that author update requests fail if they are missing required fields
+     * Test that author update requests fail if they are
+     * missing required fields
      *
      * @return void
      */

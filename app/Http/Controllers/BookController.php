@@ -25,7 +25,7 @@ class BookController extends Controller
     /**
      * List all books
      *
-     * @return \App\Book[]
+     * @return \App\Http\Resources\BookCollection
      */
     public function index()
     {
@@ -41,7 +41,7 @@ class BookController extends Controller
      *
      * @param \App\Book $book
      *
-     * @return \App\Book
+     * @return \App\Http\Resources\BookResource
      */
     public function show(Book $book)
     {

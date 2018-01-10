@@ -50,7 +50,8 @@ class EditionTest extends TestCase
         Edition::find($response->getData()->id)->delete();
     }
     /**
-     * Test that edition creation requests fail if they are missing required fields
+     * Test that edition creation requests fail if they are
+     * missing required fields
      *
      * @return void
      */
@@ -144,7 +145,8 @@ class EditionTest extends TestCase
     }
 
     /**
-     * Test that edition update requests fail if they are missing required fields
+     * Test that edition update requests fail if they are
+     * missing required fields
      *
      * @return void
      */

@@ -26,7 +26,7 @@ class EditionController extends Controller
     /**
      * Lists all editions
      *
-     * @return \App\Edition[]
+     * @return \App\Http\Resources\EditionCollection
      */
     public function index()
     {
@@ -42,7 +42,7 @@ class EditionController extends Controller
      *
      * @param \App\Edition $edition
      *
-     * @return \App\Edition
+     * @return \App\Http\Resources\EditionResource
      */
     public function show(Edition $edition)
     {

@@ -25,7 +25,7 @@ class AuthorController extends Controller
     /**
      * List all authors
      *
-     * @return \App\Author[]
+     * @return \App\Http\Resources\AuthorCollection
      */
     public function index()
     {
@@ -41,7 +41,7 @@ class AuthorController extends Controller
      *
      * @param \App\Author $author
      *
-     * @return \App\Author
+     * @return \App\Http\Resources\AuthorResource
      */
     public function show(Author $author)
     {
