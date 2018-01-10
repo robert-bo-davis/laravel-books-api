@@ -34,35 +34,6 @@ class BookTest extends TestCase
     }
 
     /**
-     * Tear down our reusable variables
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-        $this->author->delete();
-    }
-
-    /**
-     * Get author structure
-     *
-     * @return array
-     */
-    public function getAuthorArray()
-    {
-        return [
-            'type'        => 'author',
-            'id'          => $this->author->id,
-            'first_name'  => $this->author->first_name,
-            'middle_name' => $this->author->middle_name,
-            'last_name'   => $this->author->last_name,
-            'birth_year'  => $this->author->birth_year,
-            'death_year'  => $this->author->death_year,
-        ];
-    }
-
-    /**
      * Test that books are created correctly
      *
      * @return void

@@ -14,20 +14,6 @@ class EditionTest extends TestCase
 {
 
     /**
-     * Our reusable author object
-     *
-     * @var App\Author
-     */
-    protected $author;
-
-    /**
-     * Our reusable book object
-     *
-     * @var App\Book
-     */
-    protected $book;
-
-    /**
      * Setup our reusable variables
      *
      * @return void
@@ -40,42 +26,6 @@ class EditionTest extends TestCase
         // to create books. So we set both of those up here for reuse.
         $this->author = Author::create($this->fakeAuthorArray());
         $this->book   = Book::create($this->fakeBookArray($this->author));
-    }
-
-    /**
-     * Tear down our reusable variables
-     *
-     * @return void
-     */
-    public function tearDown()
-    {
-        parent::tearDown();
-        $this->author->delete();
-        $this->book->delete();
-    }
-
-    /**
-     * Get book structure
-     *
-     * @return array
-     */
-    public function getBookArray()
-    {
-        return [
-            'type' => 'book',
-            'id'   => $this->book->id,
-            'title' => $this->book->title,
-            'subtitle' => $this->book->subtitle,
-            'author' => [
-                'type'        => 'author',
-                'id'          => $this->author->id,
-                'first_name'  => $this->author->first_name,
-                'middle_name' => $this->author->middle_name,
-                'last_name'   => $this->author->last_name,
-                'birth_year'  => $this->author->birth_year,
-                'death_year'  => $this->author->death_year,
-            ]
-        ];
     }
 
     /**

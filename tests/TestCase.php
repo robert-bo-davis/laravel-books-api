@@ -20,6 +20,20 @@ abstract class TestCase extends BaseTestCase
     protected $faker;
 
     /**
+     * Our reusable author object
+     *
+     * @var App\Author
+     */
+    protected $author;
+
+    /**
+     * Our reusable book object
+     *
+     * @var App\Book
+     */
+    protected $book;
+
+    /**
      * Setup our reusable variables
      *
      * @return void
@@ -29,6 +43,58 @@ abstract class TestCase extends BaseTestCase
         parent::setUp();
 
         $this->faker = \Faker\Factory::create();
+    }
+
+    /**
+     * Tear down our reusable variables
+     *
+     * @return void
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
+
+        if ($this->author instanceof Author) {
+            $this->author->delete();
+        }
+
+        if ($this->book instanceof Book) {
+            $this->book->delete();
+        }
+    }
+
+    /**
+     * Get author structure for reuseable author
+     *
+     * @return array
+     */
+    public function getAuthorArray()
+    {
+        return [
+            'type'        => 'author',
+            'id'          => $this->author->id,
+            'first_name'  => $this->author->first_name,
+            'middle_name' => $this->author->middle_name,
+            'last_name'   => $this->author->last_name,
+            'birth_year'  => $this->author->birth_year,
+            'death_year'  => $this->author->death_year,
+        ];
+    }
+
+    /**
+     * Get book structure
+     *
+     * @return array
+     */
+    public function getBookArray()
+    {
+        return [
+            'type'     => 'book',
+            'id'       => $this->book->id,
+            'title'    => $this->book->title,
+            'subtitle' => $this->book->subtitle,
+            'author'   => $this->getAuthorArray(),
+        ];
     }
 
     /**
